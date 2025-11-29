@@ -2,24 +2,30 @@ import streamlit as st
 import numpy as np
 import os  # si déjà importé, pas besoin de le rajouter
 
-# -------------------------------------------------
-# BLOC DE SÉCURITÉ : MOT DE PASSE SIMPLE
-# -------------------------------------------------
+ACCESS_CODE = "JFC4PAP"   # <-- change le code ici si tu veux
+
 def check_password():
+    # Si déjà authentifié dans la session, on laisse passer
+    if st.session_state.get("authenticated", False):
+        return True
+
     st.markdown("### 🔐 Accès restreint")
-    password = st.text_input("Entrez le code d'accès :", type="password")
+    pwd = st.text_input("Entrez le code d'accès :", type="password")
 
-    # 👉 change le code ici :
-    if password == "JFC4PAP":
+    if pwd == ACCESS_CODE:
         st.session_state["authenticated"] = True
-        st.success("Accès autorisé ✅")
-    elif password:
+        st.success("Code correct, accès autorisé ✅")
+        st.experimental_rerun()  # on relance le script pour afficher l'app
+        return True
+    elif pwd:
         st.error("Code incorrect ❌")
+        return False
+    else:
+        return False
 
-# Si pas encore authentifié, on demande le mot de passe
-if "authenticated" not in st.session_state or not st.session_state["authenticated"]:
-    check_password()
-    st.stop()  # ⛔ on arrête le script tant que le bon mot de passe n'est pas donné
+# Si le mot de passe n'est pas bon, on bloque le reste de l'app
+if not check_password():
+    st.stop()
 
 
 import streamlit as st
@@ -211,4 +217,5 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
+
 
