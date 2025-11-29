@@ -1,5 +1,29 @@
 import streamlit as st
 import numpy as np
+import os  # si déjà importé, pas besoin de le rajouter
+
+# -------------------------------------------------
+# BLOC DE SÉCURITÉ : MOT DE PASSE SIMPLE
+# -------------------------------------------------
+def check_password():
+    st.markdown("### 🔐 Accès restreint")
+    password = st.text_input("Entrez le code d'accès :", type="password")
+
+    # 👉 change le code ici :
+    if password == "JFC4PAP":
+        st.session_state["authenticated"] = True
+        st.success("Accès autorisé ✅")
+    elif password:
+        st.error("Code incorrect ❌")
+
+# Si pas encore authentifié, on demande le mot de passe
+if "authenticated" not in st.session_state or not st.session_state["authenticated"]:
+    check_password()
+    st.stop()  # ⛔ on arrête le script tant que le bon mot de passe n'est pas donné
+
+
+import streamlit as st
+import numpy as np
 
 # ================================
 # 1. CONFIGURATION DE LA PAGE
@@ -187,3 +211,4 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
+
